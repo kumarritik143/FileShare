@@ -27,7 +27,7 @@ const ReceiveScreen = () => {
 
   const [qrValue, setQRValue] = useState('');
   const [isScannerVisible, setIsScannerVisible] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef(null);
 
   const setupServer = async () => {
     const deviceName = await DeviceInfo.getDeviceName();
@@ -154,7 +154,7 @@ const ReceiveScreen = () => {
       return server;
     };
 
-    let udpServer: any;
+    let udpServer;
     const setupUDP = async () => {
       udpServer = await listenForDiscovery();
     };

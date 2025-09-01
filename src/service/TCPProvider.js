@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import {createContext, FC, useCallback, useContext, useState} from 'react';
+import {createContext, useCallback, useContext, useState} from 'react';
 import {useChunkStore} from '../db/chunkStore';
 import TcpSocket from 'react-native-tcp-socket';
 import DeviceInfo from 'react-native-device-info';
@@ -12,25 +12,9 @@ import {Buffer} from 'buffer';
 import { receiveChunkAck, receiveFileAck, sendChunkAck } from './TCPUtils';
 import { Socket } from 'dgram';
 
-interface TCPContextType {
-  server: any;
-  client: any;
-  isConnected: boolean;
-  sentFiles: any;
-  receivedFiles: any;
-  totalSentBytes: number;
-  connectedDevice: any;
-  totalReceivedBytes: number;
-  startServer: (port: number) => void;
-  connectToServer: (host: string, port: number, deviceName: string) => void;
-  sendMessage: (message: string | Buffer) => void;
-  sendFileAck: (file: any, type: 'file' | 'image') => void;
-  disconnect: () => void;
-}
+const TCPContex = createContext(undefined);
 
-const TCPContex = createContext<TCPContextType | undefined>(undefined);
-
-export const useTCP = (): TCPContextType => {
+export const useTCP = () => {
   const context = useContext(TCPContex);
   if (!context) {
     throw new Error('useTCP must be used within TCPProvider');
@@ -42,16 +26,16 @@ const options = {
   keystore: require('../../tls_certs/server-keystore.p12'),
 };
 
-export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
-  const [server, setServer] = useState<any>(null);
-  const [client, setClient] = useState<any>(null);
+export const TCPProvider = ({children}) => {
+  const [server, setServer] = useState(null);
+  const [client, setClient] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [connectedDevice, setConnectedDevice] = useState<any>(null);
-  const [serverSocket, setServerSocket] = useState<any>(null);
-  const [sentFiles, setSentFiles] = useState<any>([]);
-  const [receivedFiles, setReceivedFiles] = useState<any>([]);
-  const [totalSentBytes, setTotalSentBytes] = useState<number>(0);
-  const [totalReceivedBytes, setTotalReceivedBytes] = useState<number>(0);
+  const [connectedDevice, setConnectedDevice] = useState(null);
+  const [serverSocket, setServerSocket] = useState(null);
+  const [sentFiles, setSentFiles] = useState([]);
+  const [receivedFiles, setReceivedFiles] = useState([]);
+  const [totalSentBytes, setTotalSentBytes] = useState(0);
+  const [totalReceivedBytes, setTotalReceivedBytes] = useState(0);
 
   const {currentChunkSet, setCurrentChunkSet, setChunkStore} = useChunkStore();
 
@@ -93,7 +77,7 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
 
   // start Server
   const startServer = useCallback(
-    (port: number) => {
+    (port) => {
       if (server) {
         console.log('Server already Running');
         return;
@@ -168,7 +152,7 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
   // Start Client
 
   const connectToServer = useCallback(
-    (host: string, port: number, deviceName: string) => {
+    (host, port, deviceName) => {
       const newClient = TcpSocket.connectTLS(
         {
           host,
@@ -276,11 +260,11 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
       await RNFS.writeFile(filePath,combinedChunks?.toString('base64'),'base64');
 
       console.log('Current received files before update:', receivedFiles);
-      setReceivedFiles((prevFiles:any)=>
-        produce(prevFiles,(draftFiles:any)=>{
-            const fileIndex= draftFiles?.findIndex((f:any)=>f.id===chunkStore.id)
+      setReceivedFiles((prevFiles)=>
+        produce(prevFiles,(draftFiles)=>{
+            const fileIndex= draftFiles?.findIndex((f)=>f.id===chunkStore.id)
             console.log(`Updating received file at index ${fileIndex}, file id: ${chunkStore.id}`);
-            console.log('All file IDs in received files:', draftFiles?.map((f: any) => f.id));
+            console.log('All file IDs in received files:', draftFiles?.map((f) => f.id));
             if(fileIndex!==-1){
                 draftFiles[fileIndex]={
                     ...draftFiles[fileIndex],
@@ -305,7 +289,7 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
   };
 
   // send message
-  const sendMessage= useCallback((message:string|Buffer)=>{
+  const sendMessage= useCallback((message)=>{
 
     if(client){
       client.write(JSON.stringify(message))
@@ -324,7 +308,7 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
 
   //  Send fileAck
 
-  const sendFileAck= async(file:any,type:'image'|'file')=>{
+  const sendFileAck= async(file,type)=>{
       if(currentChunkSet!=null){
         Alert.alert("Wait for current File to be sent")
         return
@@ -356,8 +340,8 @@ export const TCPProvider: FC<{children: React.ReactNode}> = ({children}) => {
         chunkArray,
         totalChunks: totalChunk
       })
-      setSentFiles((prevData:any)=>
-      produce(prevData,(draft:any)=>{
+      setSentFiles((prevData)=>
+      produce(prevData,(draft)=>{
         draft.push({...rowData,
           uri:file?.uri
         })

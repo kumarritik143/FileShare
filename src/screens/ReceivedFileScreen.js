@@ -1,5 +1,5 @@
 import { FlatList, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RNFS from 'react-native-fs'
 import Icon from '../components/global/Icon'
 import LinearGradient from 'react-native-linear-gradient'
@@ -14,10 +14,10 @@ import ReactNativeBlobUtil from 'react-native-blob-util'
 import { goBack } from '../utils/NavigationUtil'
 
 
-const ReceivedFileScreen:FC = () => {
-  const [receivedFiles,setReceivedFiles]= useState<any[]>([])
+const ReceivedFileScreen = () => {
+  const [receivedFiles,setReceivedFiles]= useState([])
 
-  const [isLoading,setIsLoading]=useState<boolean>(true);
+  const [isLoading,setIsLoading]=useState(true);
 
   const getFilesFromDirectory=async()=>{
     setIsLoading(true)
@@ -57,7 +57,7 @@ const ReceivedFileScreen:FC = () => {
     getFilesFromDirectory();
   },[])
 
-  const renderThumbnail =(mimType:string)=>{
+  const renderThumbnail =(mimType)=>{
     switch(mimType){
       case 'mp3':
         return <Icon name='musical-notes' size={16} color='blue' iconFamily='Ionicons'/>
@@ -72,7 +72,7 @@ const ReceivedFileScreen:FC = () => {
 
     }
   };
-  const handleOpen = (item: any) => {
+  const handleOpen = (item) => {
     console.log('Attempting to open file:', item);
     
     if (!item?.uri) {
@@ -81,7 +81,7 @@ const ReceivedFileScreen:FC = () => {
     }
 
     // Get proper MIME type
-    const getMimeType = (mimeType: string) => {
+    const getMimeType = (mimeType) => {
       switch (mimeType?.toLowerCase()) {
         case 'jpg':
         case 'jpeg':
@@ -124,7 +124,8 @@ const ReceivedFileScreen:FC = () => {
     }
   };
 
-  const handleRenderItem=({item}:any)=>(
+  const handleRenderItem=({item})=>{
+    return (
     <View style={connectionStyles.fileItem}>
       <View
       style={connectionStyles.fileInfoContainer}
@@ -159,6 +160,7 @@ const ReceivedFileScreen:FC = () => {
 
     </View>
   )
+  };
   
 
   return (

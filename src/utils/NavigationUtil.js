@@ -6,21 +6,21 @@ import {
 
 export const navigationRef = createNavigationContainerRef();
 
-export async function navigate(routeName: string, params?: object) {
+export async function navigate(routeName, params) {
   navigationRef.isReady();
   if (navigationRef.isReady()) {
       navigationRef.dispatch(CommonActions.navigate(routeName, params));
   }
 }
 
-export async function replace(routeName: string, params?: object) {
+export async function replace(routeName, params) {
   navigationRef.isReady();
   if (navigationRef.isReady()) {
       navigationRef.dispatch(StackActions.replace(routeName, params));
   }
 }
 
-export async function resetAndNavigate(routeName: string) {
+export async function resetAndNavigate(routeName) {
   navigationRef.isReady();
   if (navigationRef.isReady()) {
       navigationRef.dispatch(
@@ -39,7 +39,7 @@ export async function goBack() {
   }
 }
 
-export async function push(routeName: string, params?: object) {
+export async function push(routeName, params) {
   navigationRef.isReady();
   if (navigationRef.isReady()) {
       navigationRef.dispatch(StackActions.push(routeName, params));

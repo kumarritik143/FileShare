@@ -1,17 +1,9 @@
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { FC } from 'react';
 import {RFValue} from 'react-native-responsive-fontsize'
 
-interface IconProps{
-    color?:string;
-    size:number;
-    name:string;
-    iconFamily: 'Ionicons'|'MaterialCommunityIcons'|'MaterialIcons';
-}
-
-const Icon = ({ color, size, name, iconFamily }:IconProps)=>{
+const Icon = ({ color, size, name, iconFamily }) => {
     return(
     <>
     {

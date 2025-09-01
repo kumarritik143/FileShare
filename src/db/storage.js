@@ -6,14 +6,14 @@ export const storage= new MMKV({
 })
 
 export const mmkvStorage={
-    setItem:(key:string, value:string)=>{
+    setItem:(key, value)=>{
         storage.set(key,value)
     },
-    getItem:(key:string)=>{
+    getItem:(key)=>{
         const value= storage.getString(key);
         return value??null
     },
-    removeItem:(key:string)=>{
+    removeItem:(key)=>{
         storage.delete(key)
     }
 }

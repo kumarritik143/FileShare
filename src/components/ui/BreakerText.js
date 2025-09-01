@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import CustomText from '../global/CustomText'
 
-const BreakerText = ({ text }: { text: string }) => {
+const BreakerText = ({ text }) => {
   return (
     <View style={styles.breakerContainer}>
         <View style={styles.horizontalLine}/>

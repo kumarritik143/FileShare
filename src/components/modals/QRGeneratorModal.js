@@ -12,12 +12,7 @@ import { useTCP } from '../../service/TCPProvider';
 import DeviceInfo from 'react-native-device-info';
 import { getLocalIPAddress } from '../../utils/networkUtils';
 import { navigate } from '../../utils/NavigationUtil';
-interface ModalProps {
-    visible: boolean;
-    onClose: () => void;
-}
-
-const QRGeneratorModal: FC<ModalProps> = ({ visible, onClose }) => {
+const QRGeneratorModal = ({ visible, onClose }) => {
     const {startServer,server,isConnected}=useTCP();
     const [loading,setLoading]= useState(false);
     const [qrValue,setQRValue]=useState('Pawan');

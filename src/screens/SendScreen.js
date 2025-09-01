@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Easing, Platform} from 'react-native';
-import React, {FC, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useTCP} from '../service/TCPProvider';
 import LinearGradient from 'react-native-linear-gradient';
 import {sendStyles} from '../styles/sendStyles';
@@ -23,12 +23,12 @@ const deviceNames = [
   
 ];
 
-const SendScreen: FC = () => {
+const SendScreen = () => {
   const {connectToServer, isConnected} = useTCP();
   const [isScannerVisible, setIsScannerVisible] = useState(false);
-  const [nearbyDevices, setNearbyDevices] = useState<any[]>([]);
+  const [nearbyDevices, setNearbyDevices] = useState([]);
 
-  const handleScan = (data: any) => {
+  const handleScan = (data) => {
     const [connectionData, deviceName] = data.replace('tcp://', '').split('|');
     const [host, port] = connectionData.split(':');
     connectToServer(host, parseInt(port, 10), deviceName);
@@ -113,8 +113,8 @@ const SendScreen: FC = () => {
     return server;
   };
 
-  const getRandomPosition=(radius:number,exisitingPositions:{x:number,y:number}[],minDistance:number)=>{
-    let position:any;
+  const getRandomPosition=(radius,exisitingPositions,minDistance)=>{
+    let position;
     let isOverlapping;
     do{
       const angle= Math.random()*360;
@@ -141,7 +141,7 @@ const SendScreen: FC = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    let udpServer: any;
+    let udpServer;
     const setupServer = async () => {
       console.log("Setting up UDP server for device discovery...");
       udpServer = await listenForDevices();

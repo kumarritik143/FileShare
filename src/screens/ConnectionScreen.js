@@ -1,27 +1,25 @@
-import { View, Text, TouchableOpacity, Platform, ActivityIndicator } from 'react-native'
-import React, { FC, useEffect, useState } from 'react'
-import { useTCP } from '../service/TCPProvider'
-import Icon from '../components/global/Icon';
-import { resetAndNavigate } from '../utils/NavigationUtil';
-import LinearGradient from 'react-native-linear-gradient';
-import { sendStyles } from '../styles/sendStyles';
-import { SafeAreaView } from 'react-native';
-import { connectionStyles } from '../styles/connectionStyles';
-import CustomText from '../components/global/CustomText';
-import Options from '../components/home/Options';
-import { FlatList } from 'react-native';
-import { formatFileSize } from '../utils/libraryHelpers';
-import ReactNativeBlobUtil from 'react-native-blob-util';
+import { View, Text, TouchableOpacity, Platform, SafeAreaView, ScrollView, ActivityIndicator, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { connectionStyles } from '../styles/connectionStyles'
+import { sendStyles } from '../styles/sendStyles'
 import { Colors } from '../utils/Constants';
+import { useTCP } from '../service/TCPProvider'
+import { navigate, resetAndNavigate } from '../utils/NavigationUtil'
+import { pickDocument, pickImage, formatFileSize } from '../utils/libraryHelpers'
+import Icon from '../components/global/Icon'
+import CustomText from '../components/global/CustomText'
+import LinearGradient from 'react-native-linear-gradient'
+import ReactNativeBlobUtil from 'react-native-blob-util'
+import Options from '../components/home/Options'
 
-const ConnectionScreen:FC = () => {
+const ConnectionScreen = () => {
 
   const {connectedDevice,disconnect,sendFileAck,sentFiles,receivedFiles,totalReceivedBytes,totalSentBytes,isConnected} = useTCP();
 
-  const [activeTab, setActiveTab]= useState<'SENT' |'RECEIVED'>('SENT');
+  const [activeTab, setActiveTab]= useState('SENT');
 
 
-  const renderThumbnail =(mimType:string)=>{
+  const renderThumbnail =(mimType)=>{
     switch(mimType){
       case 'mp3':
         return <Icon name='musical-notes' size={16} color='blue' iconFamily='Ionicons'/>
@@ -36,11 +34,11 @@ const ConnectionScreen:FC = () => {
 
     }
   };
-  const onMediaPickedUp= (image:any)=>{
+  const onMediaPickedUp= (image)=>{
     console.log('Picked image:',image);
     sendFileAck(image,'image')
   }
-  const onFilePickedUp=(file:any)=>{
+  const onFilePickedUp=(file)=>{
     console.log("File is Picked",file);
     sendFileAck(file,'file')
   }
@@ -51,12 +49,12 @@ const ConnectionScreen:FC = () => {
     }
   },[isConnected])
 
-  const handleTabChange=(tab:'SENT'|'RECEIVED')=>{
+  const handleTabChange=(tab)=>{
     setActiveTab(tab)
 
   }
 
- const renderItem=({item}:any)=>{
+ const renderItem=({item})=>{
   return(
       <View style={connectionStyles.fileItem}>
         <View style={connectionStyles.fileInfoContainer}>
@@ -221,11 +219,11 @@ const ConnectionScreen:FC = () => {
                 {
                   activeTab==='SENT'
                   ?formatFileSize(sentFiles?.reduce(
-                    (total:number,file:any)=>total+file.size,0
+                    (total,file)=>total+file.size,0
                   ) || 0)
                   :formatFileSize(
                     receivedFiles?.reduce(
-                      (total:number,file:any)=>total + file.size,0
+                      (total,file)=>total + file.size,0
                     ) || 0
                   )
                 }

@@ -10,18 +10,14 @@ import Icon from '../global/Icon';
 import {Camera,CodeScanner,useCameraDevice} from 'react-native-vision-camera'
 import { useTCP } from '../../service/TCPProvider';
 import { navigate } from '../../utils/NavigationUtil';
-interface ModalProps {
-    visible: boolean;
-    onClose: () => void;
-}
-const QRScannerModal: FC<ModalProps> = ({ visible, onClose }) => {
+const QRScannerModal = ({ visible, onClose }) => {
 
     const {connectToServer,isConnected}=useTCP();
     
     const [loading,setLoading]= useState(false);
     const [codeFound,setCodeFound]=useState(false);
     const [hasPermission,setHasPermission]=useState(false);
-    const device=  useCameraDevice('back') as any
+    const device=  useCameraDevice('back')
     const shimmerTranslateX= useSharedValue(-300);
     const shimmerStyle= useAnimatedStyle(()=>({
         transform:[{translateX:shimmerTranslateX.value}]
@@ -50,7 +46,7 @@ const QRScannerModal: FC<ModalProps> = ({ visible, onClose }) => {
         )
     },[shimmerTranslateX])
 
-    const handleScan= (data:any)=>{
+    const handleScan= (data)=>{
         const [connectionData,deviceName]=data.replace('tcp://','').split('|');
         const [host,port]=connectionData?.split(":");
 
@@ -60,7 +56,7 @@ const QRScannerModal: FC<ModalProps> = ({ visible, onClose }) => {
 
     }
 
-    const codeScanner= useMemo<CodeScanner>(()=>({
+    const codeScanner= useMemo(()=>({
         codeTypes:['qr','codabar'],
         onCodeScanned:codes=>{
             if(codeFound){

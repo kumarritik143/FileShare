@@ -1,26 +1,9 @@
 import { View, Text, TextStyle, StyleSheet, Platform } from 'react-native'
-import React, { FC } from 'react'
+import React from 'react'
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Colors } from '../../utils/Constants';
-type Varient='h1'|'h2'|'h3'|'h4'|'h5'|'h6'|'h7';
-type PlatformType='android'|'ios';
-interface CustomTextProps{
-    varient?:Varient;
-    fontFamily?:
-    "Okra-Bold"|
-    "Okra-Regular"|
-    "Okra-Black"|
-    "Okra-Light"|
-    "Okra-Medium";
-    fontSize?:number;
-    color?:string;
-    style?:TextStyle| TextStyle[];
-    children?:React.ReactNode;
-    numberOfLines?:number;
-    onLayout?:(event:any)=>void;
-}
 
-const fontSizeMap: Record<Varient,Record<PlatformType,number>>={
+const fontSizeMap = {
     h1: { android: 24, ios: 22 },
     h2: { android: 22, ios: 20 },
     h3: { android: 20, ios: 18 },
@@ -30,7 +13,7 @@ const fontSizeMap: Record<Varient,Record<PlatformType,number>>={
     h7: { android: 10, ios: 9 }
 }
 
-const CustomText:FC<CustomTextProps> = ({
+const CustomText = ({
     varient,
     fontFamily='Okra-Regular',
     fontSize,
@@ -42,13 +25,13 @@ const CustomText:FC<CustomTextProps> = ({
     ...props
 }) => {
 
-    let computedFontSize:number=
+    let computedFontSize =
     Platform.OS==='android'
     ?RFValue(fontSize||12)
     :RFValue(fontSize||10);
     
     if(varient&&fontSizeMap[varient]){
-        const defaultSize= fontSizeMap[varient][Platform.OS as PlatformType];
+        const defaultSize= fontSizeMap[varient][Platform.OS];
         computedFontSize=RFValue(fontSize||defaultSize)
     }
     const fontFamilyStyle={

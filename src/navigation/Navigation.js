@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React,{FC} from 'react'
+import React from 'react'
 import {createNativeStackNavigator} from "@react-navigation/native-stack"
 import { NavigationContainer } from '@react-navigation/native';
 import { navigationRef } from '../utils/NavigationUtil';
@@ -13,7 +13,7 @@ import { TCPProvider } from '../service/TCPProvider';
 
 
 const Stack= createNativeStackNavigator();
-const Navigation: FC = () => {
+const Navigation = () => {
   return (
     <TCPProvider>
       <NavigationContainer ref={navigationRef}>

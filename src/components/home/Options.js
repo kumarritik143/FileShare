@@ -7,15 +7,10 @@ import CustomText from '../global/CustomText';
 import { useTCP } from '../../service/TCPProvider';
 import { navigate } from '../../utils/NavigationUtil';
 import { pickDocument, pickImage } from '../../utils/libraryHelpers';
-interface OptionsProps{
-    isHome?:boolean,
-    onMediaPickedUp?:(media:any)=>void;
-    onFilePickedUp?:(file:any)=>void;
-}
 
-const Options = ({isHome, onFilePickedUp, onMediaPickedUp}:OptionsProps) => {
+const Options = ({isHome, onFilePickedUp, onMediaPickedUp}) => {
     const { isConnected}=useTCP();
-    const handleUniversalPicker= async(type:string)=>{
+    const handleUniversalPicker= async(type)=>{
 
         if(isHome){
             if(isConnected){

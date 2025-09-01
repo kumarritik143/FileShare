@@ -8,9 +8,9 @@ import { resolve } from "path";
 
 
 export const receiveFileAck= async(
-    data:any,
-    socket:any, 
-    setReceivedFiles:any
+    data,
+    socket, 
+    setReceivedFiles
 )=>{
     const {setChunkStore,chunkStore} =useChunkStore.getState()
     if(chunkStore){
@@ -18,8 +18,8 @@ export const receiveFileAck= async(
         return;
     }
     console.log('Adding file to received files:', data);
-    setReceivedFiles((prevData:any)=>
-    produce(prevData,(draft:any)=>{
+    setReceivedFiles((prevData)=>
+    produce(prevData,(draft)=>{
         draft.push(data);
         console.log('File added to received files. Total received files:', draft.length);
     })
@@ -54,10 +54,10 @@ export const receiveFileAck= async(
 
 
 export const sendChunkAck= async(
-    chunkIndex:any,
-    socket:any,
-    setTotalSentBytes:any,
-    setSentFiles:any,
+    chunkIndex,
+    socket,
+    setTotalSentBytes,
+    setSentFiles,
 )=>{
     const {currentChunkSet,resetCurrentChunkSet} =useChunkStore.getState()
     if(!currentChunkSet){
@@ -82,13 +82,13 @@ export const sendChunkAck= async(
                 })
            
         )
-        setTotalSentBytes((prev:number)=>prev+currentChunkSet.chunkArray[chunkIndex]?.length);
+        setTotalSentBytes((prev)=>prev+currentChunkSet.chunkArray[chunkIndex]?.length);
 
         if(chunkIndex+2>totalChunk){
             console.log("All chunks sent successfully✅");
-            setSentFiles((prevFile:any)=>
-            produce(prevFile,(draftFiles:any)=>{
-                const fileIndex= draftFiles?.findIndex((f:any)=>f.id===currentChunkSet.id)
+            setSentFiles((prevFile)=>
+            produce(prevFile,(draftFiles)=>{
+                const fileIndex= draftFiles?.findIndex((f)=>f.id===currentChunkSet.id)
                 if(fileIndex!==-1){
                     draftFiles[fileIndex].available=true
                 }
@@ -101,11 +101,11 @@ export const sendChunkAck= async(
     }
 }
 export const receiveChunkAck= async(
-    chunk:any,
-    chunkNo:any,
-    socket:any,
-    setTotalReceivedBytes:any,
-    generateFile:any
+    chunk,
+    chunkNo,
+    socket,
+    setTotalReceivedBytes,
+    generateFile
 )=>{
 
     const {chunkStore,resetChunkStore,setChunkStore}= useChunkStore.getState();
@@ -130,7 +130,7 @@ export const receiveChunkAck= async(
         };
         
         setChunkStore(updatedChunkStore);
-        setTotalReceivedBytes((prevValue:number)=>prevValue+bufferChunk.length);
+        setTotalReceivedBytes((prevValue)=>prevValue+bufferChunk.length);
         
         // Check if we have received all chunks
         const receivedChunks = updatedChunkArray.filter(chunk => chunk !== null).length;
